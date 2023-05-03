@@ -3,11 +3,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-N=40
+N=4
 s_grid=np.random.choice([1,-1],size=(N,N))
 s_grid0 = s_grid
 
-def del_E(grid:list,i):
+def del_E(grid:list,i,j):
+    del_e= grid[i,j]*grid[i,j+1] + grid[i,j]*grid[i,j-1] + grid[i,j]*grid[i+1,j] + grid[i,j]*grid[i-1,j] 
+    return -del_e
+
+
+
 
 
 # Create a new figure and axis

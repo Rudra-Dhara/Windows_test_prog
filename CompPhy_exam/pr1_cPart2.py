@@ -1,42 +1,58 @@
-#finding the solution the bound state energy using rk4 method
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
+#defining the potential
+def v_pot(r):
+    x=0.7*r
 
+    v=-0.5041*np.exp(-x)/x - 79.530227*np.exp(-4*x)/x + 312.4307*np.exp(-7*x)/x
+    return v
 
-e_arr = np.linspace(-0.74,-0.78,100)
+x=np.linspace(0.4,5,100)
+
+v_min= np.min(v_pot(x))
+print('The minimum value of the potential is = ',v_min)
+plt.plot(x,v_pot(x))
+plt.title("Potential vs distance plot")
+plt.xlabel('distance (r)')
+plt.ylabel('Reduced potential')
+plt.show()
+
+#shooting ---------------------------------------------------------------------------------
 
 y_min= 1000 #arbitrary large garbage value
 
-e_min=-0.74
-e_max=-0.78
-while abs(y_min)>=0.1:
-    #defining potential
-    a=1.45
-    def v(x):
-        if x<a:
-            return -2.891
-        else:
-            return 0
-        
-
+e_min= -v_min
+e_max=-0.00
+tol=0.01
+#loop
+count=0
+y_min0=0
+y_min=100000 #arbitary large garbage value
+while True:
     # function of x at RHS
     #setting energy
     e=(e_min+e_max)/2
 
     def f(x,t):
-        return (v(t)-e)*x
+        return (v_pot(t)-e)*x
     # Initial conditions kept const for the rest of the problem
     k = 1
     m = 1
-    ti = 0
-    tf = 10
+    ti = 0.01
+    tf = 5
     x0 = 0
-    v0 = 1 #arbitarary value just effect the normalization
+    v0 = 1 #arbitrary value only effect the normailzation
 
     # Define the fourth-order Runge-Kutta method
     # N is the number of time division
     def runge_kutta(f,N):
+        if abs(y_min)<=tol:
+            print(y_min,e)
+            e_min=y_min
+            e_max= 4.66
+            y_min0=y_min
+
         dt = (tf - ti) / N
         t = np.linspace(ti, tf, N)
         x = np.zeros(N)
@@ -73,5 +89,14 @@ while abs(y_min)>=0.1:
     elif y[-1]>0:
         e_max = e
     y_min=y[-1]
+    
+    if abs(y_min-y_min0)<=tol:
+       print('There is no other solution below the energy = ',-e)
+       break
+       
+    
+        
+    
+    
 
-print(f'The energy value of the box potential = {e}')
+

@@ -74,4 +74,4 @@ while abs(y_min)>=0.1:
         e_max = e
     y_min=y[-1]
 
-print(e,y_min)
+print(f'The energy value of the box potential = {e}')

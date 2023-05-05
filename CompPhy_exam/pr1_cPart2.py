@@ -8,15 +8,12 @@ def v_pot(r):
     v=-0.5041*np.exp(-x)/x - 79.530227*np.exp(-4*x)/x + 312.4307*np.exp(-7*x)/x
     return v
 
-x=np.linspace(0.4,5,100)
+x1=np.linspace(0.4,5,100)
 
-v_min= np.min(v_pot(x))
-print('The minimum value of the potential is = ',v_min)
-plt.plot(x,v_pot(x))
-plt.title("Potential vs distance plot")
-plt.xlabel('distance (r)')
-plt.ylabel('Reduced potential')
-plt.show()
+v_min= np.min(v_pot(x1))
+
+x=np.array([])
+
 
 #shooting ---------------------------------------------------------------------------------
 
@@ -37,21 +34,21 @@ while True:
     def f(x,t):
         return (v_pot(t)-e)*x
     # Initial conditions kept const for the rest of the problem
-    k = 1
-    m = 1
-    ti = 0.01
-    tf = 5
+    ti = 5
+    tf = 0.01
     x0 = 0
-    v0 = 1 #arbitrary value only effect the normailzation
+    v0 = 0.1 #arbitrary value only effect the normailzation
 
     # Define the fourth-order Runge-Kutta method
     # N is the number of time division
+    if abs(y_min)<=tol:
+        print(y_min,e)
+        e_min=y_min
+        e_max= 4.66
+        y_min0=y_min
+        
     def runge_kutta(f,N):
-        if abs(y_min)<=tol:
-            print(y_min,e)
-            e_min=y_min
-            e_max= 4.66
-            y_min0=y_min
+        
 
         dt = (tf - ti) / N
         t = np.linspace(ti, tf, N)
@@ -95,8 +92,13 @@ while True:
        break
        
     
-        
-    
-    
+#plt.plot(x,y)
+print('The minimum value of the potential is = ',v_min)
+plt.plot(x,v_pot(x))
+plt.plot(x,y)
+plt.title("Potential vs distance plot")
+plt.xlabel('distance (r)')
+plt.ylabel('Reduced potential')
+plt.show()
 
 

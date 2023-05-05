@@ -10,7 +10,7 @@ y_min= 1000 #arbitrary large garbage value
 
 e_min=-0.74
 e_max=-0.78
-while abs(y_min)>=0.1:
+while abs(y_min)>=0.001:
     #defining potential
     a=1.45
     def v(x):
@@ -31,7 +31,7 @@ while abs(y_min)>=0.1:
     m = 1
     ti = 0
     tf = 10
-    x0 = 0
+    x0 = 0.00
     v0 = 1 #arbitarary value just effect the normalization
 
     # Define the fourth-order Runge-Kutta method
@@ -75,3 +75,5 @@ while abs(y_min)>=0.1:
     y_min=y[-1]
 
 print(f'The energy value of the box potential = {e}')
+plt.plot(x,y)
+plt.show()

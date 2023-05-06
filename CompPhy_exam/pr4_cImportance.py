@@ -18,7 +18,7 @@ def g_r(r1,r2,A):
 
 
 # Set the number of samples to use for the Monte Carlo integration
-N = 1000000
+N = 10000000
 
 # Generate random samples from the importance sampling distributions for r1 and r2
 r1_samples = np.random.rand(N)

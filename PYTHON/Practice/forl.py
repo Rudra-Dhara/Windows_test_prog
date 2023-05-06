@@ -1,50 +1,114 @@
-import numpy as np
-import matplotlib.pyplot as plt
-# Define the function to integrate
-def f(r1, r2, th):
-    return (r1**2 * r2**2 * np.sin(th) * np.exp(-2*(r1 + r2))) / (np.sqrt(r1**2 + r2**2 - 2*r1*r2*np.cos(th)))
+import numpy as np 
+import math as m
+import matplotlib.pyplot as plt 
 
-def p(x, A):
-    return A * np.exp(-x)
-# Define the integration limits
-r_min = 0
-r_max = 10
-th_min = 0
-th_max = np.pi
+MeV=1.6*10**-13
+fm=10**-15
+c=3*10**8
 
-# Define the importance sampling distributions for r1 and r2
-def g_r(r1,r2,A):
-    return A**2 * np.exp(-r1-r2)
+V0=60*MeV
+a=1.45*fm
+h=197.92*MeV*fm/c
+m=938*MeV/c**2
 
 
-# Set the number of samples to use for the Monte Carlo integration
-N = 1000000
+def V(r):
+    if r<=a:
+        return -V0 
+    else: 
+        return 0
 
-# Generate random samples from the importance sampling distributions for r1 and r2
-r1_samples = np.random.rand(N)
-r2_samples = np.random.rand(N)
-
-# Transform the samples to the integration limits using the inverse CDF method
-A = 1 / (1 - np.exp(-10)) # Calculate the value of A to normalize p(x)
-
-r1_imp = -np.log(np.ones_like(r1_samples) - r1_samples/A)
-r2_imp = -np.log(np.ones_like(r2_samples) - r2_samples/A)
+def f(r,u,u1,E,V):
+    s=2*m/h**2*(V(r)-E)*u
+    return s
 
 
-# Generate random samples within the integration limits for th
-th_samples = np.random.uniform(th_min, th_max, N)
+def RK4(f,r,u,u1,h,E,V):
+    k1=h*u1
+    j1=h*f(r,u,u1,E,V)
+    k2=h*(u1+j1/2)
+    j2=h*f(r+h/2,u+k1/2,u1+j1/2,E,V)
+    k3=h*(u1+j2/2)
+    j3=h*f(r+h/2,u+k2/2,u1+j2/2,E,V)
+    k4=h*(u1+j3)
+    j4=h*f(r+h,u+k3,u1+j3,E,V)
+    u1+=1/6*(j1+2*j2+2*j3+j4)
+    u+=1/6*(k1+2*k2+2*k3+k4)
+    r+=h
+    return r,u,u1 
 
-# Compute the function values at the sample points
-f_samples = f(r1_imp, r2_imp, th_samples)
 
-# Compute the weights for each sample using the importance sampling distributions
-weights = (f_samples) / (g_r(r1_imp,r2_imp,A))
+N=1000
+def U(r,r0,u0,u10,E,V):
+    h=(r-r0)/N
+    R,WF,WFS=[r0],[u0],[u10]
+    for i in range(N):
+        oput=RK4(f,r0,u0,u10,h,E,V)
+        r0,u0,u10=oput[0],oput[1],oput[2]
+        R.append(r0)
+        WF.append(u0)
+        WFS.append(u10)
+    return R,WF,WFS
 
-# Compute the integral approximation using the Monte Carlo method and importance sampling
-integral = np.mean(weights)
 
-# Scale the result by the volume of the integration region
-integral *= (th_max - th_min)
+A=1#This is the amplitude of the wavefunction the value of which doesn't 
+# matter. Derivative of u at r=0 is, u'(0)=Ak
 
-# Print the result
-print("The Monte Carlo integral approximation with importance sampling is:", integral*8*np.pi**2)
+r=10*a
+def u(E):
+    k=np.sqrt(2*m*(V0+E))/h
+    u10=A*k 
+    s=U(r,0,0,u10,E,V)[2][-1]
+    return s
+
+e0=-V0*0.4 
+h1=V0*10**-4
+for i in range(50):
+    u1=(u(e0+h1)-u(e0))/h1
+    e0-=u(e0)/u1
+
+print("The energy eigenvalue is", e0/MeV)
+
+
+E=np.linspace(-V0*0.3,0,100)
+plt.plot(E,u(E),'r',label="u(10a)")
+plt.plot(E,E*0,'b')
+plt.xlabel("Energy--->")
+plt.ylabel("u(10a)--->")
+plt.legend()
+plt.show()
+
+
+#The new potential 
+
+def V1(r):
+    a,b,c=1,4,7
+    Va,Vb,Vc=-10.463*MeV,-1650.6*MeV,6484.3*MeV
+    x=0.7/fm*r
+    return (Va*np.exp(-a*x)+Vb*np.exp(-b*x)+Vc*np.exp(-c*x))/x
+
+
+A=1
+V10=60*MeV
+r=10*a
+def u1(E):
+    k=np.sqrt(2*m*(V0+E))/h
+    u10=A*k 
+    s=U(r,0.2*a,0,u10,E,V1)[2][-1]
+    return s
+
+e0=-V0*0.5
+h1=V0*10**-4
+for i in range(50):
+    u10=(u1(e0+h1)-u1(e0))/h1
+    e0-=u1(e0)/u10
+
+print("The energy eigenvalue is", e0/MeV)
+
+E=np.linspace(-V0*0.12,0,100)
+plt.plot(E,u1(E),'r',label="u(10a)")
+plt.plot(E,E*0,'b')
+plt.xlabel("Energy--->")
+plt.ylabel("u(10a)--->")
+plt.legend()
+plt.show()

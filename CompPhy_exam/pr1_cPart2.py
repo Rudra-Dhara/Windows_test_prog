@@ -8,7 +8,7 @@ def v_pot(r):
     v=-0.5041*np.exp(-x)/x - 79.530227*np.exp(-4*x)/x + 312.4307*np.exp(-7*x)/x
     return v
 
-x1=np.linspace(0.4,5,100)
+x1=np.linspace(0.6,10,1000)
 
 v_min= np.min(v_pot(x1))
 
@@ -19,37 +19,32 @@ x=np.array([])
 
 y_min= 1000 #arbitrary large garbage value
 
-e_min= -v_min
+e_min= v_min
 e_max=-0.00
 tol=0.01
 #loop
 count=0
 y_min0=0
 y_min=100000 #arbitary large garbage value
+
+e1=-0.30
+e2=-0.28
 while True:
-    # function of x at RHS
-    #setting energy
-    e=(e_min+e_max)/2
+   
+    e=(e1 + e2)/2 
 
     def f(x,t):
         return (v_pot(t)-e)*x
+    
     # Initial conditions kept const for the rest of the problem
-    ti = 5
-    tf = 0.01
-    x0 = 0
-    v0 = 0.1 #arbitrary value only effect the normailzation
+    ti = 10
+    tf = 0.001
+    x0 = 0.01
+    v0 = -np.sqrt(abs(e))*x0 #arbitarary value just effect the normalization
 
     # Define the fourth-order Runge-Kutta method
     # N is the number of time division
-    if abs(y_min)<=tol:
-        print(y_min,e)
-        e_min=y_min
-        e_max= 4.66
-        y_min0=y_min
-        
     def runge_kutta(f,N):
-        
-
         dt = (tf - ti) / N
         t = np.linspace(ti, tf, N)
         x = np.zeros(N)
@@ -77,28 +72,27 @@ while True:
 
 
     # Define the number of mesh points
-    x, y, z = runge_kutta(f,10000)
+    x, y, z = runge_kutta(f,1000)
 
     #finding the minimum energy and error
-    
-    if y[-1]<0:
-        e_min = e
-    elif y[-1]>0:
-        e_max = e
-    y_min=y[-1]
-    
-    if abs(y_min-y_min0)<=tol:
-       print('There is no other solution below the energy = ',-e)
-       break
-       
-    
-#plt.plot(x,y)
+    if y[-1]>0:
+        e1=e
+    elif y[-1]<0:
+        e2=e
+    if abs(y[-1])<=0.001:
+        print('Bound state energy = ',e)
+        break
+
+
+
 print('The minimum value of the potential is = ',v_min)
-plt.plot(x,v_pot(x))
-plt.plot(x,y)
+plt.plot(x1,v_pot(x1),label = 'Potential')
+plt.plot(x,np.ones_like(x)*e,ls=':',label='BS Energy')
+plt.plot(x,y+np.ones_like(x)*e,label= 'wave function')
 plt.title("Potential vs distance plot")
 plt.xlabel('distance (r)')
-plt.ylabel('Reduced potential')
+plt.ylabel('Reduced potential/ Wave function')
+plt.legend()
 plt.show()
 
 

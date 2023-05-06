@@ -27,8 +27,6 @@ while abs(y_min)>=0.001:
     def f(x,t):
         return (v(t)-e)*x
     # Initial conditions kept const for the rest of the problem
-    k = 1
-    m = 1
     ti = 0
     tf = 10
     x0 = 0.00

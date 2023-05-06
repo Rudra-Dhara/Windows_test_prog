@@ -73,5 +73,8 @@ while abs(y_min)>=0.001:
     y_min=y[-1]
 
 print(f'The energy value of the box potential = {e}')
-plt.plot(x,y)
+plt.plot(x,np.ones_like(x)*e,ls=":",label='BS energy')
+plt.plot(x,y+np.ones_like(x)*e,label='wave fn')
+plt.xlabel('distance')
+plt.legend()
 plt.show()

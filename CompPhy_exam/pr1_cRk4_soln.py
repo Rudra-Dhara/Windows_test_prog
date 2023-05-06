@@ -2,7 +2,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+a=1.45
+def v_pot(x):
+    v_op=[]
+    for i in range(len(x)):
+        if x[i]<a:
+            v_op.append(-2.891)
+        else:
+            v_op.append(0)
+    v_op[0]=1
+    return v_op
 
 e_arr = np.linspace(-0.74,-0.78,100)
 
@@ -75,6 +84,7 @@ while abs(y_min)>=0.001:
 print(f'The energy value of the box potential = {e}')
 plt.plot(x,np.ones_like(x)*e,ls=":",label='BS energy')
 plt.plot(x,y+np.ones_like(x)*e,label='wave fn')
+plt.plot(x,v_pot(x),label='Potential')
 plt.xlabel('distance')
 plt.legend()
 plt.show()

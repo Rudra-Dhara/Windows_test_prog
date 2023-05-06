@@ -50,21 +50,23 @@ nu_list=[0.5,0.5]
 fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 
 # Run the Runge-Kutta method for two different damping coefficients
-t1, x1, v1 = runge_kutta(f, 1000, nu_list[0],0.5)
-t5, x5, v5 = runge_kutta(f, 100000, nu_list[1],1.2)
+N_list=[1000,10000,100000,10**6]
+for N in N_list:
+    t1, x1, v1 = runge_kutta(f, N, nu_list[0],0.5)
+    t5, x5, v5 = runge_kutta(f, N, nu_list[1],1.2)
 
-# Plot the results
-ax[0].plot(t1, x1, label="A = 0.5")
-ax[0].set_xlabel("Time")
-ax[0].set_ylabel("Theta")
-ax[0].set_title("Damped driven Pendulum (A = 0.5)")
-ax[0].legend()
+    # Plot the results
+    ax[0].plot(t1, x1, label="A = 0.5, N = {}".format(N))
+    ax[0].set_xlabel("Time")
+    ax[0].set_ylabel("Theta")
+    ax[0].set_title("Damped driven Pendulum (A = 0.5)")
+    ax[0].legend()
 
-ax[1].plot(t5, x5, color = 'red', label="A = 1.2")
-ax[1].set_xlabel("Time")
-ax[1].set_ylabel("Theta")
-ax[1].set_title("Damped driven Pendulum (A = 1.2)")
-ax[1].legend()
+    ax[1].plot(t5, x5, label="A = 1.2, N = {}".format(N))
+    ax[1].set_xlabel("Time")
+    ax[1].set_ylabel("Theta")
+    ax[1].set_title("Damped driven Pendulum (A = 1.2)")
+    ax[1].legend()
 
 plt.tight_layout()
 plt.show()

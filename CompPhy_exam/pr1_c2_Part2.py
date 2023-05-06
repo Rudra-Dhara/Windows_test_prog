@@ -1,3 +1,4 @@
+#2nd part of problem 2 part c
 import matplotlib.pyplot as plt
 import numpy as np
 

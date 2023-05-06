@@ -17,34 +17,34 @@ def g_r(r1,r2,A):
     return A**2 * np.exp(-r1-r2)
 
 
-# Set the number of samples to use for the Monte Carlo integration
-N = 10000000
+# number of sampling 
+N = 10000000 #max number supported by my ram
 
 # Generate random samples from the importance sampling distributions for r1 and r2
-r1_samples = np.random.rand(N)
-r2_samples = np.random.rand(N)
+r1_samp = np.random.rand(N)
+r2_samp = np.random.rand(N)
 
-# Transform the samples to the integration limits using the inverse CDF method
-A = 1 / (1 - np.exp(-10)) # Calculate the value of A to normalize p(x)
+# transformation to exp distribution
+A = 1 / (1 - np.exp(-r_max)) # Calculate the value of A to normalize p(x)
 
-r1_imp = -np.log(np.ones_like(r1_samples) - r1_samples/A)
-r2_imp = -np.log(np.ones_like(r2_samples) - r2_samples/A)
+r1_imp = -np.log(np.ones_like(r1_samp) - r1_samp/A)
+r2_imp = -np.log(np.ones_like(r2_samp) - r2_samp/A)
 
 
-# Generate random samples within the integration limits for th
-th_samples = np.random.uniform(th_min, th_max, N)
+# random samples within the integration limits for th
+th_samp = np.random.uniform(th_min, th_max, N)
 
 # Compute the function values at the sample points
-f_samples = f(r1_imp, r2_imp, th_samples)
+f_samp = f(r1_imp, r2_imp, th_samp)
 
-# Compute the weights for each sample using the importance sampling distributions
-weights = (f_samples) / (g_r(r1_imp,r2_imp,A))
+# Intigration simulation
+I_samp = (th_max - th_min)*(f_samp) / (g_r(r1_imp,r2_imp,A))   #first and last terms are normalization factor
 
-# Compute the integral approximation using the Monte Carlo method and importance sampling
-integral = np.mean(weights)
+# Compute the integral by taking the mean 
+intg = np.mean(I_samp)
 
 # Scale the result by the volume of the integration region
-integral *= (th_max - th_min)
 
 # Print the result
-print("The Monte Carlo integral approximation with importance sampling is:", integral*8*np.pi**2)
+print("The Monte Carlo integral approximation with importance sampling is:", intg*8*np.pi**2)
+

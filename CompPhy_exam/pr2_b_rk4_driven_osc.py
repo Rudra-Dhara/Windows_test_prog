@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # Initial conditions kept const for the rest of the problem
 ti = 0
-tf = 100 * np.pi
+tf = 150 * np.pi
 x0 = 0.2
 v0 = 0
 

@@ -3,8 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-N=100
-Nrun=10*N**2
+N=128
+Nrun=(N**2)*100
 s_grid=np.random.choice([1],size=(N,N))
 s_grid0 = s_grid.copy()
 
@@ -21,7 +21,7 @@ def rep(j):
         return j
 
 def E_site(grid:list,i,j):
-    del_e= grid[i,j]*grid[i,rep(j+1)] + grid[i,j]*grid[i,rep(j-1)] + grid[i,j]*grid[rep(i+1),j] + grid[i,j]*grid[rep(i-1),j] 
+    del_e= 0.01*grid[i,j] + grid[i,j]*grid[i,rep(j+1)] + grid[i,j]*grid[i,rep(j-1)] + grid[i,j]*grid[rep(i+1),j] + grid[i,j]*grid[rep(i-1),j] 
     return -del_e
 
 def s_flip(grid, i,j):
@@ -38,6 +38,7 @@ def s_flip(grid, i,j):
             return grid
 
 mag_list=[]
+en_list=[]
 print(T_list)
 for T in T_list:
 
@@ -59,22 +60,50 @@ for T in T_list:
     mag_list.append(abs(mag))
     print('running')
 print(mag_list)
-    
 
 
+#revrsing the plot
+mag_list_rev=[]
+for T in T_list[::-1]:
 
-# Create a new figure and axis
-fig, ax = plt.subplots(2,2)
-ax[0,1].imshow(s_grid0, cmap='binary', vmin=-1, vmax=1)
-ax[0,1].set_title('initial')
+    for k in range(Nrun*20):
+        #random lattice site
+        i=np.random.randint(0,N)
+        j=np.random.randint(0,N)
 
-# Plot the array as a bitmap image with black for -1 and white for +1
-ax[0,0].imshow(s_grid, cmap='binary', vmin=-1, vmax=1)
-ax[0,0].set_title('after')
+        if E_site(s_grid,i,j)>0:
+            s_grid[i,j]=-1*s_grid[i,j]  # allowing the  flip
+        else:
+            rn=np.random.random()
+            if (rn <= np.exp(2*E_site(s_grid,i,j)/T)):
+                s_grid[i,j]=-1*s_grid[i,j]  # allowing the flip
+    mag=0
+    for i in range(N):
+        mag+=sum(s_grid[i])
+
+    mag_list_rev.append(abs(mag))
+    print('running')
+print(mag_list_rev)
 
 
-# Set the title and show the plot
-plt.show()
+# # Create a new figure and axis
+# fig, ax = plt.subplots(2,2)
+# ax[0,1].imshow(s_grid0, cmap='binary', vmin=-1, vmax=1)
+# ax[0,1].set_title('initial')
 
-plt.plot(T_list,mag_list)
+# # Plot the array as a bitmap image with black for -1 and white for +1
+# ax[0,0].imshow(s_grid, cmap='binary', vmin=-1, vmax=1)
+# ax[0,0].set_title('after')
+
+
+# # Set the title and show the plot
+# plt.show()
+
+plt.plot(T_list,mag_list,label='Increasing temp from Low temp')
+plt.plot(T_list,mag_list_rev[::-1],label='Decreasing temp from high temp')
+plt.legend()
+plt.xlabel('temp')
+plt.ylabel('absolute magnetization')
+plt.xticks(T_list)
+plt.grid(True,which='major', axis='both', linewidth=0.25, alpha=0.4)
 plt.show()

@@ -1,17 +1,27 @@
 import numpy as np
 
-def f(x, y, z):
-    return np.sin(x) + np.cos(y) + np.exp(-z**2)
+# Define the kernel
+kernel = np.array([0, 1, 2, 3])
 
-def mc_integrate(f, limits, N):
-    volume = np.prod([limit[1] - limit[0] for limit in limits])
-    samples = np.random.uniform(*limits, size=(N, len(limits)))
-    values = f(*samples.T)
-    integral = volume * np.mean(values)
-    return integral
+# Define your square grid (example values)
+square_grid = np.array([[1, 2, 3, 4],
+                        [5, 6, 7, 8],
+                        [9, 10, 11, 12],
+                        [13, 14, 15, 16]])
 
-limits = [(0, np.pi), (-np.pi, np.pi), (0, 10)]
-N = 10000000
+# Determine the dimensions of the grid
+rows, cols = square_grid.shape
 
-integral = mc_integrate(f, limits, N)
-print(f"Using {N} samples, the integral is {integral}")
+# Create an empty result array with the same shape as the grid
+result = np.zeros((rows, cols))
+
+# Perform the convolution-like operation
+for i in range(rows):
+    for j in range(cols):
+        for k in range(len(kernel)):
+            if j - k >= 0:
+                result[i, j] += square_grid[i, j - k] * kernel[k]
+
+# Display the result
+print("Result of convolution-like operation:")
+print(result)

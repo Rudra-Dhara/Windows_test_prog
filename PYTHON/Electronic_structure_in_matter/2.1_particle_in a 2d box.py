@@ -76,7 +76,7 @@ for i in range(len(eigen_fun_x1)):
 #z= eigen_fun_x1.reshape(100,100)*eigen_fun_x1.reshape(100,100) 
 
 
-# Create a 3D figure
+# Create a 3D figure for amplitude
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
@@ -86,11 +86,25 @@ ax.scatter(x, y, z1, c=z1, cmap='viridis')  # You can customize the colormap ('c
 # Add labels to the axesaa
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
-ax.set_zlabel('Z-axis')
+ax.set_zlabel('Wave Function')
 
 # Show the plot
 plt.show()
 
+# Create a 3D figure for PDF
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Create the scatter plot
+ax.scatter(x, y, np.square(z1),c=z1, cmap='viridis')  # You can customize the colormap ('cmap') as you like
+
+# Add labels to the axesaa
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Probability density')
+
+# Show the plot
+plt.show()
 
 z2=[]
 for i in range(len(eigen_fun_x1)):
@@ -111,13 +125,24 @@ ax.scatter(x, y, z2, c=z2)  # You can customize the colormap ('cmap') as you lik
 # Add labels to the axesaa
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
-ax.set_zlabel('Z-axis')
+ax.set_zlabel('wave function')
 
 # Show the plot
 plt.show()
 
+# Create a 3D figure for PDF
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
+# Create the scatter plot
+ax.scatter(x, y, np.square(z2),c=z2, cmap='viridis')  # You can customize the colormap ('cmap') as you like
 
+# Add labels to the axesaa
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Probability density')
+
+plt.show()
 
 
 

@@ -159,6 +159,17 @@ ax.set_ylabel('Y-axis')
 ax.set_zlabel('Z-axis')
 
 # Show the plot
+# Create a 3D figure for PDF
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Create the scatter plot
+ax.scatter(x, y, np.square(z1),c=z1, cmap='viridis')  # You can customize the colormap ('cmap') as you like
+
+# Add labels to the axesaa
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Probability density')
 plt.show()
 
 
@@ -188,6 +199,19 @@ plt.show()
 
 
 
+# Create a 3D figure for PDF
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Create the scatter plot
+ax.scatter(x, y, np.square(z2),c=z2, cmap='viridis')  # You can customize the colormap ('cmap') as you like
+
+# Add labels to the axesaa
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Probability density')
+
+plt.show()
 
 
 

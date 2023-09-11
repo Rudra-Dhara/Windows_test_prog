@@ -52,8 +52,7 @@ for E in energies:
             min_error_energies[index] = E
             eigenfunctions[index] = psi_solution[:, 0]
 
-# Plot the eigenfunctions with minimum error energies
-plt.figure(figsize=(10, 6))
+
 eigen_fun_x=[]
 for i, energy in enumerate(min_error_energies):
     if node_counts[i] == 1:

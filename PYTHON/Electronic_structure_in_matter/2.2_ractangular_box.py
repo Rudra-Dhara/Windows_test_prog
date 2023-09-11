@@ -156,7 +156,7 @@ ax.scatter(x, y, z1, c=z1, cmap='viridis')  # You can customize the colormap ('c
 # Add labels to the axesaa
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
-ax.set_zlabel('Z-axis')
+ax.set_zlabel('wave function')
 
 # Show the plot
 # Create a 3D figure for PDF
@@ -192,7 +192,7 @@ ax.scatter(x, y, z2, c=z2)  # You can customize the colormap ('cmap') as you lik
 # Add labels to the axesaa
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
-ax.set_zlabel('Z-axis')
+ax.set_zlabel('wave function')
 
 # Show the plot
 plt.show()

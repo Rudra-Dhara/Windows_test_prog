@@ -52,13 +52,21 @@ for E in energies:
             min_error_energies[index] = E
             eigenfunctions[index] = psi_solution[:, 0]
 
+#defining true function
+def psi_true(n,x):
+    return np.sqrt(2)*np.sin(n*np.pi*x)
+
 # Plot the eigenfunctions with minimum error energies
 plt.figure(figsize=(10, 6))
 for i, energy in enumerate(min_error_energies):
     if node_counts[i] == 1:
         continue
-    plt.plot(x, eigenfunctions[i], label=f'E = {energy:.2f}, Nodes = {node_counts[i]-2}')
+    norm2 = np.sum((np.array(eigenfunctions[i])**2))*dx  #integrating the factor
+    norm = np.sqrt(norm2)
+    plt.plot(x, np.array(eigenfunctions[i])/norm, label=f'E = {energy:.2f}, Nodes = {node_counts[i]-2}')
+    plt.plot(x,psi_true(i-1,x), ls = ":",label=f'True wf {i-1} state')
     print(node_counts[i]-1,'th energy',energy,"where the original value is",(node_counts[i]-1)**2*np.pi**2/2)
+
 plt.xlabel('Position')
 plt.ylabel('Wavefunction')
 plt.title('Wavefunctions for Particle in a 1D Box with Minimum Error Energies')

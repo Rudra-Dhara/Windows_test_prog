@@ -3,42 +3,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #defining the potential
+l=2 #angular momentum
 def v_pot(r):
-    v=-1/r
+    v=-1/r + l*(l+1)/(2*r**2)
     return v
 
-x1=np.linspace(0.6,10,1000)
+x1=np.linspace(2,20,1000)
 
 v_min= np.min(v_pot(x1))
 
 x=np.array([])
 
 
-#shooting ---------------------------------------------------------------------------------
-
-y_min= 1000 #arbitrary large garbage value
-
-e_min= v_min
-e_max=-0.00
-tol=0.01
-#loop
-count=0
-y_min0=0
-y_min=100000 #arbitary large garbage value
-
-e1=0
-e2=-2
-for e in np.linspace(0,-20,10):
+e_max= -0.01
+e_min = -0.1
+for e in np.linspace(e_min,e_max,100):
    
 
     def f(x,t):
-        return (v_pot(t)-e)*x
+        return 2*(v_pot(t)-e)*x
     
     # Initial conditions kept const for the rest of the problem
-    ti = 10
-    tf = 0.001
-    x0 = 0.01
-    v0 = -np.sqrt(abs(e))*x0 #arbitarary value just effect the normalization
+    ti = 22
+    tf = 0.5
+    x0 = np.exp(-np.sqrt(abs(e))*ti)
+    v0 = -x0*np.sqrt(abs(e)) #arbitarary value just effect the normalization
 
     # Define the fourth-order Runge-Kutta method
     # N is the number of time division
@@ -70,17 +59,18 @@ for e in np.linspace(0,-20,10):
 
 
     # Define the number of mesh points
-    x, y, z = runge_kutta(f,1000)
+    x, y, z = runge_kutta(f,10000)
 
     
 
 
-    if abs(y[-1])<1:
-        print('The minimum value of the potential is = ',v_min)
+    if abs(y[-1])<0.003:
+        print(y[-1])
+        print('Bound state energy',e)
         plt.plot(x1,v_pot(x1),label = 'Potential')
         plt.plot(x,np.ones_like(x)*e,ls=':',label='BS Energy')
-        plt.plot(x,y+np.ones_like(x)*e,label= 'wave function')
-        plt.title("Potential vs distance plot")
+        plt.plot(x,y+np.ones_like(x)*e,label= f'wave function{e}')
+        plt.title(f"Potential vs distance plot for energy ")
         plt.xlabel('distance (r)')
         plt.ylabel('Reduced potential/ Wave function')
         plt.legend()
